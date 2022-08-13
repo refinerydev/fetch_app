@@ -1,10 +1,12 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/refinerydev/fetch_app/app"
 )
 
 func main() {
@@ -12,9 +14,9 @@ func main() {
 
 	e.Pre(middleware.RemoveTrailingSlash())
 
-	e.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]string{"message": "success"})
-	})
+	app.NewRouter(e)
 
-	e.Logger.Fatal(e.Start(":8081"))
+	server := fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT"))
+
+	e.Logger.Fatal(e.Start(server))
 }
